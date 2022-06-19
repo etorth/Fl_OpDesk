@@ -221,15 +221,15 @@ class App : public Fl_Double_Window {
         std::string title;
         title = "Executing: ";
         title += cmd;
-        win->copy_label(title);
+        win->copy_label(title.c_str());
         win->show();
         Fl::wait(.10);
 
         // RUN THE COMMAND, APPEND OUTPUT TO WINDOW
         FILE *fp = popen(cmd.c_str(), "r");
         char linebuf[4096];
-        while ( fgets(fp, linebuf, sizeof(linbuf)-1) != NULL ) {
-            buf->text(text);
+        while ( fgets(linebuf, sizeof(linebuf)-1, fp) != NULL ) {
+            buf->text(linebuf);
             Fl::wait(.10);
         }
         pclose(fp);
