@@ -1,0 +1,472 @@
+0.82  -- 03/23/2012 - erco@seriss.com
+
+    o Fixes for Bernhard Schonhammer:
+
+        Fl_OpDesk::Connect() modified to handle -1 vs. 1 error codes
+
+    o Fixes for Al: MyDesk wasn't keeping track of next_boxid correctly:
+
+	  "Create 5 boxes, add_1, add_2, add_3, add_4, and add_5.
+	   Then delete add_2 and save the layout. Then open it, 
+	   create another "add" box: it should be labeled "add_6",
+	   but instead it is add_5 (duplicate name)."
+
+      Fixed by saving the next_boxid to the layout file.
+
+0.81  -- 07/23/2011 - erco@seriss.com
+      [INTERNAL RELEASE TO Al Ibrahim?]
+
+    o test-app changes:
+
+    	> Added sin() and cos() to the "Functions"
+
+	> NEED TO ADD ramp() FUNCTION SO IT CAN MAKE A LOOP AROUND APP.
+
+	> NEED TO ADD xyplot() FUNCTION SO IT CAN PLOT AN ASCII GRAPH
+	  Expect input to be 0.0 ~ 1.0
+
+	> NEED TO MODIFY add() TO HANDLE FLOATS OR INTS
+
+    o Docs:
+	> Added main page and a few images
+        > Fixed problem with use of \returns
+
+    o 'make tar' converts tabs to spaces in source
+      so folks with Microsoft's frigging tabstop=4 default
+      can read code indenting as expected.
+
+    o 'make tar' remove absolute path to FLTKCONFIG (Kai-Uwe Behrmann email 07/22/11)
+
+    o #include <stdlib.h> in MyButton.H (Kai-Uwe Behrmann email 07/22/11)
+
+0.80  -- 05/01/2011 - erco@seriss.com
+
+    o Fl_OpDesk API
+
+	> Fl_OpDesk: added new FL_OPCONNECT_STYLE_TRACE_CURVE line style
+	  This allows /curved/ traces as an option.
+
+	> Fl_OpDesk: added selection border size to control the border width
+	  drawn around selected boxes.
+
+	      Fl_OpDesk::GetOpBoxSelectionBorderSize()
+	      Fl_OpDesk::SetOpBoxSelectionBorderSize()
+
+	> Fl_OpConnect: added width settings for connect lines, eg.
+
+	      Fl_OpConnect::GetWidth()/SetWidth()
+
+	> Fl_OpBox: added minimum connection lengths so that connection lines 
+	  can have a minimum width when they 'wrap around' the boxes
+	  (to allow for text to float next to buttons)
+
+	      Fl_OpBox::GetMinimumConnectionLength()
+	      Fl_OpBox::GetMinimumConnectionLength()
+
+	> Fixed segfault when hitting ESC to close app while testboxes loaded.
+	  But in Fl_OpDesk::DisconnectAll() not handling array indexes 
+	  correctly while deleting connections.
+
+    o test-app changes:
+    
+        > Fixed problem report from Al regarding test-app:
+
+	    "Lets say I create a layout of 10 boxes, then I delete one of the boxes,
+	     and save the layout. Then when  I open the layout the connections
+	     between boxes fail to draw because of a numbering issue."
+
+	  Problem was with MyBox.C not saving the label() name of the box.
+	  Fixed by modifying the format of the layout Save/Load function
+	  to save the box's label().
+
+	> Added Edit > Preferences > Lines > Trace/Curved/Straight options
+	  This was added to support the new 'connect line style'
+	  feature that was added to Fl_OpDesk.
+	  The value of this setting IS SAVED in the .layout files.
+
+        > Added Edit > Preferences > Debug
+	  This controls the diagnostic output. Default is off.
+	  (This option is not saved in layout files)
+
+        > no longer starts with test boxes.
+          You can get them by invoking the new menubar item
+      
+	    Test > Make Test Boxes
+
+	  Test includes error checking for unknown lines.
+
+
+    o Doxygen docs:
+    
+    	> fleshed out for Fl_OpDesk widget's main description
+
+        > Docs improved for Fl_OpDesk::ParseFullButtonName()
+
+    o Test application widget changes:
+
+        > Changed return value of MyButton::GetConstantValue():
+
+		0.70: const std::string&
+		0.80: std::string
+
+	> Changed return value of MyButton::GetDataTypeStr():
+
+		0.70: const char *
+		0.80: std::string
+
+	> Changed return value of MyButton::GetConstantValue():
+
+		0.70: const std::string&
+		0.80: std::string
+
+	> Added method MyButton::IsDataType()
+	
+	> MyButton's internal public enum changed from chars ('i'/'f'/'s')
+	  to bitwise flags (1,2,4) so that flags could be combined with
+	  compiler bit operators.
+	
+	> Changes to MyDesk.H
+        
+	    1) Added Clear() method
+
+	    2) Added GetNextBoxId()
+
+	> App::MakeStrcatBox() method: changed MyButton::String -> MyButton::ANY 
+
+	> Added App::MakePrintBox() method to show how one can use boxes to print things
+	  (Also added this new "Print" box to the "Operators" menubar menu)
+
+
+0.70  -- 09/08/2009 - erco@seriss.com
+
+    o Implemented FLTK naming standards
+
+	OpConnect --> Fl_OpConnect
+	OpButton  --> Fl_OpButton
+	OpBox     --> Fl_OpBox
+	OpDesk    --> Fl_OpDesk
+
+0.64  -- 09/08/2009 - erco@seriss.com
+
+    o test-app modifications:
+
+        > MyBoxInfoDialog.[CH] added
+
+	> Added dialog to open when box is double clicked.
+
+	  Shows the box's button's current constant values
+	  in a dialog. Values can be changed in this dialog,
+	  and the changes are reflected in the displayed
+	  constants on the boxes.
+
+	  The background color of the input fields for each button
+	  are white if the constant are in effect (button not connected),
+	  and a light gray if constant is overridden (button *is* connected).
+
+    o README.txt file cleanup, added design goals and acknowledgements.
+
+    o Added a README.txt file to the test-app directory to describe
+      its purpose and intended use as an example.
+
+    o API:
+
+        * OpBox: changed these from protected to private:
+	
+	     OpBox::_ConnectToOnly() 
+	     OpBox::_DisconnectOnly()
+
+0.63  -- 08/26/2009 10:42p - erco@seriss.com
+
+    o Save/Load now saves source code.
+
+      Load and Save should now work properly in all respects,
+      such that source code, data types, and connections all
+      can be saved/loaded consistently, and source code will
+      generate properly after a load.
+
+      Please let me know if you encounter any problems with load/save,
+      no matter how small.
+
+    o Fixed problem with output data types not being saved
+
+    o Fixed problem with string constants not handling quoted strings correctly
+
+
+0.62  -- 08/26/2009 19:45p - erco@seriss.com
+
+    o When making copies of boxes, new unique boxnames are created
+
+    o Connections are now copied too
+
+    o Various mods to support connection copying.
+
+    o API: 
+    
+         ** REMOVED **
+	 std::string OpBox::GetFullName()		// use label() instead
+	 connect_clipboard[] from OpDesk [INTERNAL]
+
+	 ** ADDED **
+	 OpConnect* OpButton::GetConnection(size_t index);
+	 void       OpConnect::CopyAttributes(OpConnect* from);
+	 void       OpDesk::CopyConnections(vector<OpBox*>& orig, vector<OpBox*>&  copy);
+	 OpConnect* OpDesk::GetConnection(srcbut, dstbut);
+
+    o Various changes to test-app to support above
+
+    TODO:
+
+	* LAYOUT LOAD/SAVE: needs to save the box's internal soure code.
+	      This means when a layout is loaded, the code won't generate.
+	      It's not hard to implement, just haven't gotten to it.
+
+	* LASSO SELECTION
+
+0.61  -- 08/26/2009 01:16 - erco@seriss.com
+
+    o Added File->New, File->Open, File->Load, File->Save
+
+    o API: Added new methods. These were needed for file loading/save
+
+	** OPBOX **
+	  OpBox::GetTotalButtons()
+	  OpBox::GetButton()
+	  OpBox::GetIndexForButton()
+
+	** OPDESK **
+	  OpDesk::Clear()
+	  OpDesk::FindBoxByLable()
+	  OpDesk::ParseFullButtonName()
+	  OpDesk::FindBoxForFullName()
+	  OpDesk::FindButtonForFullName()
+	  OpDesk::Connect(src_name, dst_name, errmsg)
+
+    o Added 'boxes' array to OpDesk to keep track of all boxes.
+      (The old child()/children() technique was a problem during 
+      loading files; Fl_Scroll horiz/vert scrollbar ordering was not
+      updated until /after/ a redraw)
+
+    o INTERNAL: Added some private methods for OpDesk ctors to manage
+      new 'boxes' array:
+
+	  OpDesk::_AddBox()
+	  OpDesk::_RemoveBox()
+
+    o Removed all 'using namespace std' to prevent namespace collisions
+
+    o test-app: Added Subs.[CH] with some general purpose string subroutines
+      needed for file loading/saving
+
+    o test-app: Added various methods to support loading/saving layouts
+
+0.60  -- 07/30/2009 - erco@seriss.com
+
+    o Added initial implementation of copy/paste (^C/^V)
+
+    o Added new "Strcat" operation box that works with strings
+
+    o Created new MyButton datatypes: int, float, string.
+
+    o Fixed two bugs reported by Al:
+    	1) Connection from button to titlebar of opbox would crash
+	2) Connection from output to input on same box would work (should not)
+
+    o Incorporated OpDesk version number into the lgpl header
+
+0.59  -- 07/26/2009 - erco@seriss.com
+
+    o Implemented Edit -> Select All, ^A shortcut.
+
+    o Implemented Edit -> Cut, ^X shortcut.
+
+    o Fixed small problem in OpBox with 'DEL' and DeleteAll() not deleting all the selected boxes
+
+    o Added menu shortcuts (^C, ^V, ^S, ^A) -- WIP FOR IMPLEMENTATION
+
+0.58  -- 07/25/2009 - erco@seriss.com
+
+    o Fix for WinXP crash; needed remove() before delete_widget()
+
+    o All selected boxes now can be dragged at a time, instead of just one under mouse
+
+    o Fix to ExpandVariable() as per Al Ibrahim's bug report 07/25/09
+
+    o Enabled -Wall for linux builds, fixed resulting errors
+
+    o Changed test-app to generate compilable perl code, for easy 
+      compile/execution.  Variables now expand to perl's syntax.
+
+    o Changed "Save Source" to open source in text viewer window, instead of
+      printing to stdout, so code can easily be copy/pasted into perl prompt.
+
+0.57  -- 07/20/2009 - erco@seriss.com
+
+    o Workaround for WinXP crash when deleting widget with DEL key.
+      Seems like "something" is wrong with how we use Fl::delete_widget().
+      Implemented a hide() for now, needs to be fixed!
+
+    o Removed some unused fl_line_style() stuff
+
+    o Creating add/mult boxes automatically assigns incrementing constants
+      
+0.56  -- 07/19/2009 - erco@seriss.com
+
+    API changes to streamline how the app can intercept connections,
+    and how to handle connection errors.  In earlier releases, connection
+    intercepts were implemented as callbacks (SetConnectCallback(), etc),
+    but virtual methods seemed a better way to do this.
+
+	o API CHANGE: added:
+	
+	    OpDesk::ConnectionError(OpButton *src, OpButton *dst, string &errmsg)
+	   
+	  This virtual method is called whenever a connection error occurs, so the
+	  app can define the behavior that occurs when a connection fails.
+
+	o API CHANGE: Removed:
+	
+		enum OpConnectType
+		OpButton::SetConnectCallback()
+		OpButton::GetConnectCallback()
+		OpButton::GetUserData()
+
+	  Replaced those with two virtual methods the app can define to override:
+
+	  	int OpButton::Connecting(OpButton*,string& errmsg)  -- handles connections
+	  	void OpButton::Disconnecting(OpButton*)             -- handles disconnections
+
+	o Added TODO file to distro
+
+	o Small doc tweaks:
+		o Simple hierarchy chart in OpDesk
+		o Example code for looping through boxes/buttons
+		o All OpXxx.H files have source pages now (added \file briefs)
+
+0.55  -- 07/19/2009 - erco@seriss.com
+
+	o Added destructors to handle disconnects when opboxes deleted,
+	  fixing core dumps.
+
+	o Example code generator fixed: was walking tree right-to-left instead of left-to-right,
+	  generating code where values were used before they were defined.
+
+	o Fixed Aladin's report where "xxx(YYY)" names were appearing in code instead of xxx_YYY
+
+        o API CHANGE -- Removed:
+	    int OpBox::GetIndexForButton(OpButton *but)
+	    int OpBox::GetButtonTotal(OpButtonType io)
+
+          Replaced those with:
+
+	    // INPUTS
+	    int OpBox::GetTotalInputButtons()
+	    OpButton* OpBox::GetInputButton(int index)
+	    int OpBox::GetIndexForInputButton(OpButton *but)
+
+	    // OUTPUTS
+	    int OpBox::GetTotalOutputButtons()
+	    OpButton* OpBox::GetOutputButton(int index)
+	    int OpBox::GetIndexForOutputButton(OpButton *but)
+
+0.54  -- 07/16/2009 - erco@seriss.com
+
+	o Fixed thick line cap problem.. fat connection lines should look solid now
+
+	o Added drag-out connections
+
+	o Added connection callbacks, so app can allow/deny connections:
+	
+		1) OpButton::SetConnectCallback() -- sets callback
+		2) OpButton::GetConnectCallback() -- gets callback
+		3) OpButton::GetUserData() -- gets userdata
+
+	o TODO: 
+		o Need a way to delete existing connections
+	          ie. click on connection lines to select them, DEL/^X to delete
+
+		o When interactive drag-out connections fail, need a way for
+		  the app to receive the error. (Callback?)
+	
+		o Rubber-band selection of multiple boxes
+
+		o When more than one box selected, all should move together
+
+		o Copy/Paste
+
+		o Zoom
+
+
+0.53  -- 07/14/2009 - erco@seriss.com
+
+	o Created ./test-app directory so the test application
+	  can have its own separate .[CH] files. test app was
+	  renamed to all lowercase; test-App.C -> test-app.C
+
+        o test-app:
+	
+		> When you click on input buttons, a dialog comes up
+		  prompting for the button's constant value.
+
+		> Made constant values right justified in display
+
+	o API:
+		> Added int OpButton::IsConnected(void), so one
+		  can easily see if a button has any connections.
+	  
+0.52  -- 06/09/2009 - erco@seriss.com
+
+    MAKEFILE:
+
+        o Added Makefile.MICROSOFT for Visual Studio Express 2005
+
+    API:
+
+    	o Selecting a box now brings it 'to the front', so that
+	  when its moved around, it moves over other boxes.
+
+	o Small clipping problem fixed when connector lines go off edges of screen
+
+    INTERNAL:
+
+        o Had to change around some STL code to support MS
+
+
+0.51  -- 05/29/2009 - erco@seriss.com
+
+    test-App:
+
+	o Added right-click popup menus for buttons
+
+	o Added an example of procedurally setting constants for input buttons
+
+	o Modified MyButtobn subclass to show the constant values next to the buttons
+
+    API:
+
+	o Protected methods renamed with '_' prefix
+
+	o Added to OpButton API:
+	    OpButton* GetConnectedButton(int index=0);
+	    size_t GetTotalConnectedButtons() const;
+
+    DOCS:
+
+    	o Added docs for OpButton and OpConnect
+
+	o Overall pass at making sure all methods are documented.
+
+    TBD: Needs more "general" docs on how to do certain things
+         interactive connections, interactive rubberband select,
+	 box images, more features in 'test-App'.
+
+0.50  -- 05/25/2009 - erco@seriss.com
+
+	o Initial pre-release -- proof of concept
+	  Has desk, boxes, buttons, connects, trace line drawing,
+	  selection behavior, single box dragging.
+
+	  TBD: interactive connections, interactive rubberband select,
+	       box images, sample code gen example.
+
+
+

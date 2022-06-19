@@ -1,0 +1,76 @@
+o Fix bug with ^C/^V where if boxes are deleted, ^V doesn't work.
+  ^C should probably make a /copy/ of the boxes in an array.
+
+o Fl_OpDesk needs an 'error callback' so that when user tries to do
+  something interactively that can't be done, an error is posted
+  via the error callback (which invokes a popup dialog by default).
+
+* All box definitions loaded from .lay file should appear in the menu.
+
+* SAVE/LOAD: Save box's source code!
+
+* MAKE CONNECTION LINES SELECTABLE AND REMOVABLE (DELETE/^X)
+  Selecting a connection line should deselect all boxes to avoid confusion.
+  Selecting a line should turn it white, or somehow make it obvious (a white
+  line around it?) eg:
+
+      UNSELECTED: ______________________
+
+                  ______________________
+        SELECTED: ======================
+
+* rubberband select boxes -- MEDIUM HARD
+
+* Test app: Make "Save Code" really save, or gray out
+            Make "View Code" do the current 'open in viewer" behavior,
+	    Make "Run Code" run thru perl interpreter, show output in terminal.
+	    eg. FILE *fp = popen("perl", "w"); etc..
+
+* DETECT RECURSION DURING CONNECTIONS
+  See if an output is about to be connected UP the chain,
+  making a feed-back loop that kills the code generator.
+
+* Disallow adding buttons to a box where more than one button
+  has the same label name. This should be illegal, and should
+  cause an error. Every button should have a unique name, eg.
+  "A1", "A2", etc.
+
+* Have OpBox color settings get copied down to the 
+  OpButtons IF their color WAS the same. eg:
+
+  OpBox::fgcolor(Fl_Color val) {
+      for ( int t=0; t<inputbuttons.size(); t++ ) {
+          if (inputbuttons[t].fgcolor() == fgcolor() ) {	// old color same as ours?
+	      inputbuttons[t].fgcolor(val);			// copy down..
+	  }
+      }
+      fgcolor = val;						// set ours
+  }
+
+* Resolve all TODO: items in source code
+
+* (LOW) PROBLEM WHEN SCROLLING DESK, CONSTANTS NOT REDRAWING
+  Seems to be Fl_Scroll's optimizations not letting us
+  draw the constants off the edge of the box.
+  We probably need to make an extra group in which
+  the OpBox lives that's large enough for the constants:
+
+         . . .  ________________ 
+         .     |      OpBox     |
+         .     |________________|
+         . 1.0 | A |        |   |
+         .     |---|        |   |
+         . 2.0 | B |        |   |
+         .     |---|        |   |
+         . 2.0 | B |        |   |
+         . . . .-----------------
+
+	 <--- MyBox extends
+	      left to here
+	      for constants.
+
+* (LOW) Need a way to reposition buttons after being added, so
+  that eg. thisbut.MoveAbove(otherbut); and thisbut.MoveBelow(otherbut)
+
+* (LOW) Images inside boxes -- EASY?
+

@@ -1,0 +1,45 @@
+FLTKDIR=C:\fltk-1.1.9
+CXX=CL
+CXXFLAGS=/TP /nologo /MD /EHsc /I. /I$(FLTKDIR) /wd4996 \
+	 /DVS2000 /DMICROSOFT /DWIN32 /D_WINDOWS /D_CRT_SECURE_NO_DEPRECATE \
+	 /Zi
+LINKFLAGS=/DEBUG
+FLTKLIBS=/LIBPATH:$(FLTKDIR)\lib \
+	      fltk.lib \
+	      wsock32.lib  comctl32.lib kernel32.lib user32.lib  gdi32.lib \
+	      winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib \
+	      oleaut32.lib uuid.lib \
+	      /nologo /machine:x86 /NODEFAULTLIB:libcmt /SUBSYSTEM:CONSOLE
+
+BINS=test-OpDesk.exe test-app.exe 
+
+default: $(BINS)
+
+Fl_OpButton.obj: Fl_OpButton.C Fl_OpButton.H Fl_OpBox.H Fl_OpDesk.H
+	$(CXX) $(CXXFLAGS) $*.C /c
+
+Fl_OpBox.obj: Fl_OpBox.C Fl_OpBox.H Fl_OpButton.H Fl_OpDesk.H
+	$(CXX) $(CXXFLAGS) $*.C /c
+
+Fl_OpDesk.obj: Fl_OpDesk.C Fl_OpDesk.H Fl_OpButton.H Fl_OpBox.H
+	$(CXX) $(CXXFLAGS) $*.C /c
+
+### TEST PROGRAMS
+test-Fl_OpDesk.exe: Fl_OpDesk.obj Fl_OpButton.obj Fl_OpBox.obj test-OpDesk.C
+ 	$(CXX) $(CXXFLAGS) test-OpDesk.C \
+ 	    /link $(LINKFLAGS) Fl_OpDesk.obj Fl_OpButton.obj Fl_OpBox.obj $(FLTKLIBS) /out:$@
+
+test-app.exe: Fl_OpDesk.obj Fl_OpButton.obj Fl_OpBox.obj
+	cd test-app && nmake /r /f Makefile.MICROSOFT test-app.exe
+
+clean:
+	-del /q *.o
+	-del /q *.obj
+	-del /q *.exe
+	-del /q *.manifest
+	-del /q *.ilk
+	-del /q *.pdb
+	cd test-app && nmake /r /f Makefile.MICROSOFT clean
+
+# DO NOT REMOVE THE FOLLOWING LINES
+FORCE:

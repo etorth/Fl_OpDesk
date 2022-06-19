@@ -1,0 +1,11 @@
+### SETTINGS COMMON TO ALL MAKEFILES
+
+SHELL    = /bin/sh
+CXXFLAGS = -g -Wall
+LDFLAGS  = -g
+
+### FLTK/LINUX
+FLTKCONFIG    = fltk-config
+FLTKCXXFLAGS  = $(shell $(FLTKCONFIG) --cxxflags)
+FLTKIMAGELIBS = $(shell $(FLTKCONFIG) --ldflags)
+INC = -I.
