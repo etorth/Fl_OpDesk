@@ -101,3 +101,12 @@ ACKNOWLEDGEMENTS
     like to include more modern effects by overloading the draw()
     method of these widgets.
 
+
+----------------------------------------------------
+Added by etorth:
+
+I was trying to find a node editor implemented by FLTK and found this one.
+It's really amazing that after 10 years this library is still working without one single line change, great coding.
+
+I put it here on github that mirrors the original mainpage: http://seriss.com/people/erco/fltk/Fl_OpDesk
+The initial commit for this repo is based on version 0.82, released on 03/23/2012
