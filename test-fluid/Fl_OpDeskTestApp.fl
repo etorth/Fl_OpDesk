@@ -1,0 +1,79 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0308
+header_name {.h}
+code_name {.cxx}
+class Fl_OpDeskTestApp {open
+} {
+  Function {Fl_OpDeskTestApp()} {open
+  } {
+    Fl_Window m_window {open
+      xywh {2688 290 760 575} type Double visible
+    } {
+      Fl_Menu_Bar {} {open
+        xywh {0 0 760 20}
+      } {
+        Submenu {} {
+          label File open
+          xywh {0 0 70 21}
+        } {
+          MenuItem {} {
+            label item
+            callback {{
+	m_OpDesk->begin();
+        {
+            Fl_OpBox *opbox = new Fl_OpBox(100,100,180,120,"hello world");
+            opbox->begin();
+            {
+                /*Fl_OpButton *a =*/ new Fl_OpButton("A", FL_OP_INPUT_BUTTON);
+                /*Fl_OpButton *b =*/ new Fl_OpButton("B", FL_OP_INPUT_BUTTON);
+                /*Fl_OpButton *c =*/ new Fl_OpButton("CCC", FL_OP_INPUT_BUTTON);
+                /*Fl_OpButton *d =*/ new Fl_OpButton("OUT1", FL_OP_OUTPUT_BUTTON);
+                /*Fl_OpButton *e =*/ new Fl_OpButton("OUT2", FL_OP_OUTPUT_BUTTON);
+            }
+            opbox->end();
+        }
+	m_OpDesk->end();
+	m_window->redraw();
+}}
+            xywh {0 0 36 21}
+            code0 {\#include "Fl_OpBox.H"}
+            code1 {\#include "Fl_OpButton.H"}
+          }
+          MenuItem {} {
+            label item
+            callback {{
+	m_OpDesk->begin();
+        {
+            Fl_OpBox *opbox = new Fl_OpBox(100,100,180,120,"hello world");
+            opbox->begin();
+            {
+                /*Fl_OpButton *d =*/ new Fl_OpButton("OUT1", FL_OP_OUTPUT_BUTTON);
+                /*Fl_OpButton *e =*/ new Fl_OpButton("OUT2", FL_OP_OUTPUT_BUTTON);
+            }
+            opbox->end();
+        }
+	m_OpDesk->end();
+	m_window->redraw();
+}}
+            xywh {10 10 36 21}
+            code0 {\#include "Fl_OpBox.H"}
+            code1 {\#include "Fl_OpButton.H"}
+          }
+        }
+      }
+      Fl_Tree {} {
+        xywh {550 20 210 555}
+      }
+      Fl_Box m_OpDesk {
+        label Fl_OpDesk
+        xywh {0 18 550 559}
+        code0 {\#include "Fl_OpDesk.H"}
+        class Fl_OpDesk
+      }
+    }
+  }
+  Function {showAll()} {return_type void
+  } {
+    code {m_window->show();} {}
+  }
+}
