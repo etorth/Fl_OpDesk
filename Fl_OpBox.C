@@ -23,9 +23,6 @@
 #include "Fl_OpButton.H"
 #include "Fl_OpDesk.H"
 
-#define MIN(a,b) ((a)<(b)?(a):(b))
-#define MAX(a,b) ((a)>(b)?(a):(b))
-
 /// FLTK-style constructor for an Fl_OpBox.
 ///    Creates an instance of an Fl_OpBox on the desk.
 ///    Box will have no buttons, and will use the FLTK defaults

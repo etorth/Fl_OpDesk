@@ -24,7 +24,7 @@ void MyDesk::ConnectionError(Fl_OpButton *src, Fl_OpButton *dst, std::string &er
     msg = std::string("    INPUT: ") + src->GetFullName() + std::string("\n") +
           std::string(   "OUTPUT: ") + dst->GetFullName() + std::string("\n") +
           errmsg;
-    fl_alert(msg.c_str());              // post a dialog
+    fl_alert("%s", msg.c_str());              // post a dialog
 }
 
 // Save the entire desk layout (all boxes/buttons/connections)
