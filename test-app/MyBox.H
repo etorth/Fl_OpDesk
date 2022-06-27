@@ -73,8 +73,11 @@ public:
     // BOX INFO DIALOG
     void ShowInfoDialog();
 
+    void DoButtonMenu();
+
     // FLTK
     int handle(int e);
+
 };
 
 #endif

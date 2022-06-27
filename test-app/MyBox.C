@@ -303,6 +303,41 @@ void MyBox::AssignUniqueFullName() {
     copy_label(nametmp);
 }
 
+void MyBox::DoButtonMenu()
+{
+   Fl_Menu_Item rclick_menu[]
+   {
+       {"Edit this box", 0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
+       {"Add input box", 0, +[](Fl_Widget *w, void *)
+       {
+           MyBox *box = (MyBox*)w;
+           box->begin();
+           {
+               new MyButton ("IN", FL_OP_INPUT_BUTTON, MyButton::INT);
+           }
+           box->end();
+       }},
+
+       {"Add output box", 0, +[](Fl_Widget *w, void *)
+       {
+           MyBox *box = (MyBox*)w;
+           box->begin();
+           {
+               new MyButton ("OUT", FL_OP_OUTPUT_BUTTON, MyButton::INT);
+           }
+           box->end();
+       }},
+
+       {0},
+   };
+
+   const Fl_Menu_Item *m = rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
+   if ( m ) {
+       m->do_callback(this, m->user_data());
+       redraw();
+   }
+}
+
 /// FLTK Event handler
 ///     We trap this so we can detect double clicks on the box.
 ///
@@ -313,6 +348,9 @@ int MyBox::handle(int e) {
             // Double click on box? Show 'Info' dialog
             if ( Fl::event_clicks() == 1 ) {
                 ShowInfoDialog();
+            }
+            else if(Fl::event_button() == 3){
+                DoButtonMenu();
             }
             break;
         case FL_RELEASE:
