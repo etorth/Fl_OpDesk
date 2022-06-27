@@ -169,6 +169,7 @@ void Fl_OpDesk::DrawConnect(Fl_OpConnect *con) const {
                             float DZx = Dx - 20;
                             float DZy = Dy;
                             DrawFlatLine(Ax,Ay, Bx,By, connectwidth, 0, 0);
+                            fl_polygon(Ax, Ay, Ax + 4, Ay - 2, Ax + 4, Ay + 2);
                             fl_begin_line();
                             fl_curve(Bx,By, BZx,BZy, CZx, CZy, Cx,Cy);
                             fl_end_line();
