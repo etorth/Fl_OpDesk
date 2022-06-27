@@ -19,6 +19,7 @@
 
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
+#include <FL/Fl_RGB_Image.H>
 #include "Fl_OpBox.H"
 #include "Fl_OpButton.H"
 #include "Fl_OpDesk.H"
@@ -191,15 +192,6 @@ int Fl_OpBox::handle(int e) {
 
 /// FLTK draw() method for the Fl_OpBox.
 void Fl_OpBox::draw() {
-    // Selection box?
-    if ( selected ) {
-        fl_color(selection_color());
-        fl_push_no_clip(); // hack-begin: debug shows Fl_Scroll sets clipping to its children, this makes draw outside of clips invisible
-        for ( int t=1; t<=opdesk->GetOpBoxSelectedBorderSize(); t++ ) {
-            fl_rect(x()-t, y()-t, w()+(t*2), h()+(t*2));
-        }
-        fl_pop_clip(); // hack-end
-    }
     int title_h = GetTitleHeight();
 
     // Tell box to draw itself
@@ -214,6 +206,12 @@ void Fl_OpBox::draw() {
                              w()-inbutt_w-outbutt_w,
                              h()-title_h, 
                              color());
+
+    // Selection box?
+    if ( selected ) {
+        std::vector<uint32_t> imgBuf(w() * GetTitleHeight(), 0X88FF0000);
+        Fl_RGB_Image((const uchar *)(imgBuf.data()), w(), GetTitleHeight(), 4, 0).draw(x(), y());
+    }
 }
 
 /// INTERNAL: Recalculates button sizes, eg. when a new button is added.
