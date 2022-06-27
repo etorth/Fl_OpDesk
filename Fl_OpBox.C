@@ -194,9 +194,11 @@ void Fl_OpBox::draw() {
     // Selection box?
     if ( selected ) {
         fl_color(selection_color());
+        fl_push_no_clip(); // hack-begin: debug shows Fl_Scroll sets clipping to its children, this makes draw outside of clips invisible
         for ( int t=1; t<=opdesk->GetOpBoxSelectedBorderSize(); t++ ) {
             fl_rect(x()-t, y()-t, w()+(t*2), h()+(t*2));
         }
+        fl_pop_clip(); // hack-end
     }
     int title_h = GetTitleHeight();
 
