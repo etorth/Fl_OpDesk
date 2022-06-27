@@ -6,19 +6,19 @@ test-app: FORCE
 	( cd test-app; make )
 
 Fl_OpButton.o: Fl_OpButton.C Fl_OpButton.H Fl_OpBox.H Fl_OpDesk.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} $< -c
 
 Fl_OpBox.o: Fl_OpBox.C Fl_OpBox.H Fl_OpButton.H Fl_OpDesk.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} $< -c
 
 Fl_OpDesk.o: Fl_OpDesk.C Fl_OpDesk.H Fl_OpButton.H Fl_OpBox.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} $< -c
 
 test-OpDesk.o: test-OpDesk.C Fl_OpDesk.o
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} $< -c
 
 test-OpDesk: Fl_OpDesk.o Fl_OpButton.o Fl_OpBox.o test-OpDesk.o
-	${CXX} ${LDFLAGS} \
+	${CXX} -fsanitize=address ${LDFLAGS} \
 		Fl_OpDesk.o Fl_OpBox.o Fl_OpButton.o test-OpDesk.o \
 		$(FLTKIMAGELIBS) -o $@
 

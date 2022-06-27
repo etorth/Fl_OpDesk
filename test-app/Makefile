@@ -7,28 +7,28 @@ TESTAPPOBJS=MyConstantDialog.o MyBoxInfoDialog.o \
 default: test-app
 
 test-app.o: test-app.C MyButton.H MyBox.H MyDesk.H MyConstantDialog.H Subs.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} -I.. $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
 
 MyConstantDialog.o: MyConstantDialog.C MyConstantDialog.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} -I.. $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
 
 MyBoxInfoDialog.o: MyBoxInfoDialog.C MyBoxInfoDialog.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} -I.. $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
 
 MyBox.o: MyBox.C MyBox.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} -I.. $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
  
 MyButton.o: MyButton.C MyButton.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} -I.. $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
  
 MyDesk.o: MyDesk.C MyDesk.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} -I.. $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
  
 Subs.o: Subs.C Subs.H
-	${CXX} ${CXXFLAGS} ${INC} ${FLTKCXXFLAGS} -I.. $< -c
+	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
  
 test-app: $(OPDESKOBJS) $(TESTAPPOBJS) test-app.o
-	${CXX} ${LDFLAGS} $(OPDESKOBJS) $(TESTAPPOBJS) test-app.o $(FLTKIMAGELIBS) -o $@
+	${CXX} -fsanitize=address ${LDFLAGS} $(OPDESKOBJS) $(TESTAPPOBJS) test-app.o $(FLTKIMAGELIBS) -o $@
 
 
 clean: FORCE

@@ -215,21 +215,32 @@ int MyButton::LoadLayout(FILE *fp, int &line, std::string &errmsg) {
 // POST THE POPUP MENU FOR THIS BUTTON
 void MyButton::DoButtonMenu() {
    std::string name = GetFullName();
-   Fl_Menu_Item rclick_menu[] = {
-       { name.c_str(),     0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER },
-       { "Help",           0, 0, 0 },
-       { "Disconnect All", 0, 0, 0 },
-       { 0 }
+   Fl_Menu_Item rclick_menu[]
+   {
+       {name.c_str(), 0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
+
+       {"Help", 0, +[](Fl_Widget *, void *)
+       {
+           fl_alert("Help about this button goes here.");
+       }},
+
+       {"Disconnect All", 0, +[](Fl_Widget *p, void *)
+       {
+           dynamic_cast<MyButton *>(p)->DisconnectAll();
+       }},
+
+       {"Delete", 0, +[](Fl_Widget* p, void*)
+       {
+           dynamic_cast<MyButton *>(p)->DisconnectAll();
+           Fl::delete_widget(p);
+       }},
+
+       {0},
    };
+
    const Fl_Menu_Item *m = rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
    if ( m ) {
-       // Handle the menu item the user picked
-       std::string menuname = m->label();
-       if ( menuname == "Help" ) {
-           fl_alert("Help about this button goes here.");
-       } else if ( menuname == "Disconnect All" ) {
-           DisconnectAll();
-       }
+       m->do_callback(this, m->user_data());
    }
 }
 
