@@ -1,8 +1,8 @@
-#include "MyBox.H"
+#include "FSM_Node.H"
 #include "MyDesk.H"
 
 //////////////////////
-// test-app/MyBox.C
+// test-app/FSM_Node.C
 //////////////////////
 //
 // OpDesk (Version 0.82)
@@ -23,7 +23,7 @@
 // COPY CTOR
 //    We have to handle bookkeeping carefully for copy/paste operations.
 //
-MyBox::MyBox(const MyBox& o) : Fl_OpBox(o) {
+FSM_Node::FSM_Node(const FSM_Node& o) : Fl_OpBox(o) {
     name = o.name;
     AssignUniqueFullName();
     srccode = o.srccode;
@@ -33,7 +33,7 @@ MyBox::MyBox(const MyBox& o) : Fl_OpBox(o) {
 
 // Handle copying this box's instances of MyButton's
 //
-void MyBox::CopyButtons(const MyBox& o) {
+void FSM_Node::CopyButtons(const FSM_Node& o) {
     // MAKE COPIES OF INPUT BUTTONS
     for ( int i=0; i<o.GetTotalInputButtons(); i++ ) {
         begin();
@@ -55,7 +55,7 @@ void MyBox::CopyButtons(const MyBox& o) {
 //   OUT: src = "${A} = 1234 + ${C}"
 //    'src' returns with all instances of 'varname' changed to 'value'
 //
-void MyBox::_ExpandVariable(std::string& src, const std::string varname, const std::string value) {
+void FSM_Node::_ExpandVariable(std::string& src, const std::string varname, const std::string value) {
     // XXX: Apparently STL has no replace_all()..
     for ( int pos = src.find(varname); pos >= 0; pos = src.find(varname) ) {
         src.replace(pos, varname.size(), value); 
@@ -63,7 +63,7 @@ void MyBox::_ExpandVariable(std::string& src, const std::string varname, const s
 }
 
 // PRIVATE: Create a new button (during layout load) and load definition from layout file
-int MyBox::_LayoutMakeButton(const std::string &buttname, Fl_OpButtonType io,
+int FSM_Node::_LayoutMakeButton(const std::string &buttname, Fl_OpButtonType io,
                              FILE *fp, int &line, std::string &errmsg) {
     // Create button with default settings
     begin();
@@ -83,36 +83,36 @@ int MyBox::_LayoutMakeButton(const std::string &buttname, Fl_OpButtonType io,
 }
 
 // Set source code to a fixed string
-void MyBox::SetSourceCode(const char *val) {
+void FSM_Node::SetSourceCode(const char *val) {
     srccode = val;
 }
 
 // Return unexpanded source code
-std::string MyBox::GetSourceCode() {
+std::string FSM_Node::GetSourceCode() {
     return(srccode);
 }
 
 // Return the 'traversed' value
 //    This is used by the code generator to prevent generating code more than once.
 //
-int MyBox::GetTraversed() const {
+int FSM_Node::GetTraversed() const {
     return(traversed);
 }
 
 // See if this box has been traversed.
-int MyBox::IsTraversed() const {
+int FSM_Node::IsTraversed() const {
     return(traversed ? 1 : 0);
 }
 
 // Set the 'traversed' value
-void MyBox::SetTraversed(int val) {
+void FSM_Node::SetTraversed(int val) {
     traversed = val;
 }
 
 // Returns a copy of the configured source code with all variables expanded
 //    Walks the tree backwards to resolve inputs.
 //
-std::string MyBox::GetExpandedSourceCode() {
+std::string FSM_Node::GetExpandedSourceCode() {
     std::string out = srccode;
 
     // Expand box title
@@ -133,7 +133,7 @@ std::string MyBox::GetExpandedSourceCode() {
 }
 
 // How a box saves itself to a file
-int MyBox::SaveLayout(FILE *fp) {
+int FSM_Node::SaveLayout(FILE *fp) {
     fprintf(fp, "# %s\n", label());
     fprintf(fp, "box \"%s\"\n", GetName().c_str());
     fprintf(fp, "{\n");
@@ -172,7 +172,7 @@ int MyBox::SaveLayout(FILE *fp) {
     return(0);
 }
 
-int MyBox::_LoadSrc(FILE *fp, int &line, std::string &errmsg) {
+int FSM_Node::_LoadSrc(FILE *fp, int &line, std::string &errmsg) {
     char s[1024];
     int braces = 0;
     srccode = "";
@@ -204,7 +204,7 @@ int MyBox::_LoadSrc(FILE *fp, int &line, std::string &errmsg) {
 // How a box loads itself from a file
 //     Returns 0 if loaded OK, -1 on error, errmsg has reason.
 //
-int MyBox::LoadLayout(FILE *fp, int &line, std::string &errmsg) {
+int FSM_Node::LoadLayout(FILE *fp, int &line, std::string &errmsg) {
     int X,Y;
     char s[1024], arg[1024];
     int braces = 0;
@@ -277,13 +277,13 @@ int MyBox::LoadLayout(FILE *fp, int &line, std::string &errmsg) {
 /// Set the base name of this box, eg. "add"
 ///    Ensures the box's fullname will be 'unique'.
 ///
-void MyBox::SetName(const char *newname) {
+void FSM_Node::SetName(const char *newname) {
     name = newname;
     AssignUniqueFullName();
 }
 
 /// Get the base name of this box. eg. "add"
-std::string MyBox::GetName() const {
+std::string FSM_Node::GetName() const {
     return(name);
 }
 
@@ -292,7 +292,7 @@ std::string MyBox::GetName() const {
 ///    If boxes are created or reordered on the desk, this
 ///    should be called to ensure box has a unique name.
 ///
-void MyBox::AssignUniqueFullName() {
+void FSM_Node::AssignUniqueFullName() {
     char nametmp[256];
     int id = ((MyDesk*)GetOpDesk())->GetNextBoxId();
 #ifdef _WIN32
@@ -303,14 +303,14 @@ void MyBox::AssignUniqueFullName() {
     copy_label(nametmp);
 }
 
-void MyBox::DoButtonMenu()
+void FSM_Node::DoButtonMenu()
 {
    Fl_Menu_Item rclick_menu[]
    {
        {"Edit this box", 0, 0, 0, FL_MENU_INACTIVE|FL_MENU_DIVIDER},
        {"Add input box", 0, +[](Fl_Widget *w, void *)
        {
-           MyBox *box = (MyBox*)w;
+           FSM_Node *box = (FSM_Node*)w;
            box->begin();
            {
                new MyButton ("IN", FL_OP_INPUT_BUTTON, MyButton::INT);
@@ -320,7 +320,7 @@ void MyBox::DoButtonMenu()
 
        {"Add output box", 0, +[](Fl_Widget *w, void *)
        {
-           MyBox *box = (MyBox*)w;
+           FSM_Node *box = (FSM_Node*)w;
            box->begin();
            {
                new MyButton ("OUT", FL_OP_OUTPUT_BUTTON, MyButton::INT);
@@ -341,7 +341,7 @@ void MyBox::DoButtonMenu()
 /// FLTK Event handler
 ///     We trap this so we can detect double clicks on the box.
 ///
-int MyBox::handle(int e) {
+int FSM_Node::handle(int e) {
     int ret = Fl_OpBox::handle(e);
     switch (e) {
         case FL_PUSH:
@@ -359,7 +359,7 @@ int MyBox::handle(int e) {
     return(ret);
 }
 
-void MyBox::ShowInfoDialog() {
+void FSM_Node::ShowInfoDialog() {
     // Update the info dialog with all our buttons
     infodialog->Clear();
     for ( int t=0; t<GetTotalButtons(); t++ ) {

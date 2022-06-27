@@ -2,7 +2,7 @@
 #define _MY_BOX_H
 
 //////////////////////
-// test-app/MyBox.H
+// test-app/FSM_Node.H
 //////////////////////
 //
 // OpDesk (Version 0.82)
@@ -29,7 +29,7 @@
 // CUSTOM Fl_OpBox
 //    Our app derives from the Fl_OpBox widget to augment it with our app-specific code.
 //
-class MyBox : public Fl_OpBox {
+class FSM_Node : public Fl_OpBox {
     std::string name;                   // name for this box, eg. "add"
     std::string srccode;                // source code for this box
     int traversed;                      // "traversed" flag -- used by code generator
@@ -43,13 +43,13 @@ class MyBox : public Fl_OpBox {
 
 public:
     // CTOR
-    MyBox(int X,int Y,int W,int H,const char *L=0) : Fl_OpBox(X,Y,W,H,L) {
+    FSM_Node(int X,int Y,int W,int H,const char *L=0) : Fl_OpBox(X,Y,W,H,L) {
         name = std::string(L ? L : "unknown");
         AssignUniqueFullName();
         infodialog = new MyBoxInfoDialog();
     }
-    MyBox(const MyBox& o);
-    void CopyButtons(const MyBox& o);
+    FSM_Node(const FSM_Node& o);
+    void CopyButtons(const FSM_Node& o);
 
     // SOURCE CODE
     void SetSourceCode(const char *val);

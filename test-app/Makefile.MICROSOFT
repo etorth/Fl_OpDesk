@@ -32,8 +32,8 @@ MyBoxInfoDialog.obj: MyBoxInfoDialog.C MyBoxInfoDialog.H
 Subs.obj: Subs.C Subs.H
 	$(CXX) $(CXXFLAGS) Subs.C -c
 
-MyBox.obj: MyBox.C MyBox.H
-	$(CXX) $(CXXFLAGS) MyBox.C -c
+FSM_Node.obj: FSM_Node.C FSM_Node.H
+	$(CXX) $(CXXFLAGS) FSM_Node.C -c
 
 MyButton.obj: MyButton.C MyButton.H
 	$(CXX) $(CXXFLAGS) MyButton.C -c
@@ -43,13 +43,13 @@ MyDesk.obj: MyDesk.C MyDesk.H
 
 test-app.exe: ../Fl_OpDesk.obj ../Fl_OpButton.obj ../Fl_OpBox.obj \
 		MyConstantDialog.obj MyBoxInfoDialog.obj \
-		MyBox.obj MyButton.obj MyDesk.obj Subs.obj \
+		FSM_Node.obj MyButton.obj MyDesk.obj Subs.obj \
 		MyDesk.H \
 		test-app.C
  	$(CXX) $(CXXFLAGS) test-app.C \
  	    /link $(LINKFLAGS) ../Fl_OpDesk.obj ../Fl_OpButton.obj ../Fl_OpBox.obj \
 	    	  MyConstantDialog.obj MyBoxInfoDialog.obj \
-		  MyBox.obj MyButton.obj MyDesk.obj Subs.obj $(FLTKLIBS) /out:$@
+		  FSM_Node.obj MyButton.obj MyDesk.obj Subs.obj $(FLTKLIBS) /out:$@
 
 foo.obj: foo.C
 	$(CXX) $(CXXFLAGS) foo.C -c

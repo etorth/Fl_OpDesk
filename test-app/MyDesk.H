@@ -23,13 +23,13 @@
 #include <FL/fl_ask.H>
 #include "everything.H"
 #include "MyButton.H"
-#include "MyBox.H"
+#include "FSM_Node.H"
 
 // CUSTOM Fl_OpDesk
 //    Our app derives from the Fl_OpDesk widget to augment it with our app-specific code.
 //
 class MyDesk : public Fl_OpDesk {
-    std::vector<MyBox*> box_clipboard;  // copy/paste clipboard for MyBox's
+    std::vector<FSM_Node*> box_clipboard;  // copy/paste clipboard for FSM_Node's
     int next_boxid;                     // next box id#
 
     // Fl_OpDesk calls this virtual when connection errors occur.

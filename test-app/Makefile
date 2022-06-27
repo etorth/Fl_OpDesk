@@ -2,11 +2,11 @@ include ../makeinclude
 
 OPDESKOBJS=../Fl_OpDesk.o ../Fl_OpButton.o ../Fl_OpBox.o
 TESTAPPOBJS=MyConstantDialog.o MyBoxInfoDialog.o \
-	    MyBox.o MyButton.o MyDesk.o Subs.o 
+	    FSM_Node.o MyButton.o MyDesk.o Subs.o 
 
 default: test-app
 
-test-app.o: test-app.C MyButton.H MyBox.H MyDesk.H MyConstantDialog.H Subs.H
+test-app.o: test-app.C MyButton.H FSM_Node.H MyDesk.H MyConstantDialog.H Subs.H
 	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
 
 MyConstantDialog.o: MyConstantDialog.C MyConstantDialog.H
@@ -15,7 +15,7 @@ MyConstantDialog.o: MyConstantDialog.C MyConstantDialog.H
 MyBoxInfoDialog.o: MyBoxInfoDialog.C MyBoxInfoDialog.H
 	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
 
-MyBox.o: MyBox.C MyBox.H
+FSM_Node.o: FSM_Node.C FSM_Node.H
 	${CXX} ${CXXFLAGS} -fsanitize=address ${INC} ${FLTKCXXFLAGS} -I.. $< -c
  
 MyButton.o: MyButton.C MyButton.H

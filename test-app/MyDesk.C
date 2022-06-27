@@ -34,7 +34,7 @@ int MyDesk::SaveLayout(FILE *fp) {
     fprintf(fp, "linestyle %d\n", int(GetConnectStyle()));
     // Tell all the boxes to 'save'
     for ( int t=0; t<GetOpBoxTotal(); t++ ) {
-        MyBox *mybox = (MyBox*)GetOpBox(t);
+        FSM_Node *mybox = (FSM_Node*)GetOpBox(t);
         mybox->SaveLayout(fp);
     }
     fprintf(fp, "# %d CONNECTIONS\n", (int)GetConnectionsTotal());
@@ -68,7 +68,7 @@ int MyDesk::LoadLayout(FILE *fp, int &line, std::string &errmsg) {
         // Box?
         if ( sscanf(ss, "box \"%1023[^\"]\"", arg) == 1 ) {
             begin();
-                MyBox *box = new MyBox(0,0,150,80,arg);
+                FSM_Node *box = new FSM_Node(0,0,150,80,arg);
                 if ( box->LoadLayout(fp, line, errmsg) < 0 ) {
                     return(-1);
                 }
@@ -109,7 +109,7 @@ int MyDesk::CopySelected() {
     box_clipboard.clear();
     int count = 0;
     for ( int t=0; t<GetOpBoxTotal(); t++ ) { 
-        MyBox *b = (MyBox*)GetOpBox(t);
+        FSM_Node *b = (FSM_Node*)GetOpBox(t);
         if ( b->GetSelected() ) {
             box_clipboard.push_back(b);
             ++count;
@@ -138,9 +138,9 @@ int MyDesk::PasteSelected() {
     //    the connections, we know which to make for which.
     //
     for ( size_t t=0; t<box_clipboard.size(); t++ ) {
-        MyBox *orig = box_clipboard[t];
+        FSM_Node *orig = box_clipboard[t];
         begin();
-            MyBox *copy = new MyBox(*orig);     // create new instance of MyBox using copy ctor
+            FSM_Node *copy = new FSM_Node(*orig);     // create new instance of FSM_Node using copy ctor
             copy->position(copy->x()+100, copy->y()+100);
             copy->CopyButtons(*orig);           // copy the buttons
             copy->SetSelected(1);               // leave copy selected

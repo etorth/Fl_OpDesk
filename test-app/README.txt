@@ -28,7 +28,7 @@ THE OPDESK WIDGET'S test-app DIRECTORY
     	OpButton	MyButton	Handles loading/saving buttons, data types,
 					constants, and popup dialogs.
 
-    	OpBox 		MyBox		Handles load/save of box and buttons,
+    	OpBox 		FSM_Node		Handles load/save of box and buttons,
 					source code generation, box naming.
 
     	OpDesk		MyDesk		Handles load/save of desk, copy paste,

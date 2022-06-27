@@ -29,7 +29,7 @@
 #include <errno.h>              // errno
 
 #include "MyButton.H"
-#include "MyBox.H"
+#include "FSM_Node.H"
 #include "MyDesk.H"
 
 #include <FL/Fl_Text_Display.H>
@@ -50,10 +50,10 @@ class App : public Fl_Double_Window {
     std::string      layout_filename;   // layout filename
 
     // CREATE AN 'ADD' BOX
-    MyBox* MakeAddBox(int X, int Y) {
+    FSM_Node* MakeAddBox(int X, int Y) {
         mydesk->begin();
             // Create box
-            MyBox *mybox = new MyBox(X,Y,150,80,"add");
+            FSM_Node *mybox = new FSM_Node(X,Y,150,80,"add");
             mybox->SetSourceCode("# Box: '${BoxTitle}'\n"
                                  "${OUT} = ${A} + ${B} + ${C};\n"
                                  "printf(\"\\${OUT}: %d\\n\",${OUT});   # print result\n"
@@ -82,10 +82,10 @@ class App : public Fl_Double_Window {
     }
 
     // CREATE AN 'MULT' BOX
-    MyBox* MakeMultBox(int X, int Y) {
+    FSM_Node* MakeMultBox(int X, int Y) {
         mydesk->begin();
             // Create box
-            MyBox *mybox = new MyBox(X,Y,150,80,"mult");
+            FSM_Node *mybox = new FSM_Node(X,Y,150,80,"mult");
             mybox->SetSourceCode("# Box: '${BoxTitle}'\n"
                                  "${OUT} = ${A} * ${B};\n"
                                  "printf(\"\\${OUT}: %d\\n\",${OUT});   # print result\n"
@@ -111,10 +111,10 @@ class App : public Fl_Double_Window {
     }
 
     // CREATE A 'StrCat' BOX
-    MyBox* MakeStrcatBox(int X, int Y) {
+    FSM_Node* MakeStrcatBox(int X, int Y) {
         mydesk->begin();
             // Create box
-            MyBox *mybox = new MyBox(X,Y,150,80,"strcat");
+            FSM_Node *mybox = new FSM_Node(X,Y,150,80,"strcat");
             mybox->SetSourceCode("# Box: '${BoxTitle}'\n"
                                  "${OUT} = ${A} . ${B};\n"
                                  "printf(\"\\${OUT}: '%s'\\n\",${OUT});   # print result\n"
@@ -137,10 +137,10 @@ class App : public Fl_Double_Window {
     }
 
     // CREATE A 'Print' BOX
-    MyBox* MakePrintBox(int X, int Y) {
+    FSM_Node* MakePrintBox(int X, int Y) {
         mydesk->begin();
             // Create box
-            MyBox *mybox = new MyBox(X,Y,150,80,"print");
+            FSM_Node *mybox = new FSM_Node(X,Y,150,80,"print");
             mybox->SetSourceCode("# Box: '${BoxTitle}'\n"
                                  "print \"${IN}\\n\";\n"
                                  "\n");
@@ -158,10 +158,10 @@ class App : public Fl_Double_Window {
     }
 
     // CREATE A 'SIN' BOX
-    MyBox* MakeSinBox(int X, int Y) {
+    FSM_Node* MakeSinBox(int X, int Y) {
         mydesk->begin();
             // Create box
-            MyBox *mybox = new MyBox(X,Y,150,80,"sin");
+            FSM_Node *mybox = new FSM_Node(X,Y,150,80,"sin");
             mybox->SetSourceCode("# Box: '${BoxTitle}'\n"
                                  "${OUT} = sin(${A});\n"
                                  "\n");
@@ -179,10 +179,10 @@ class App : public Fl_Double_Window {
     }
 
     // CREATE A 'COS' BOX
-    MyBox* MakeCosBox(int X, int Y) {
+    FSM_Node* MakeCosBox(int X, int Y) {
         mydesk->begin();
             // Create box
-            MyBox *mybox = new MyBox(X,Y,150,80,"cos");
+            FSM_Node *mybox = new FSM_Node(X,Y,150,80,"cos");
             mybox->SetSourceCode("# Box: '${BoxTitle}'\n"
                                  "${OUT} = cos(${A});\n"
                                  "\n");
@@ -370,8 +370,8 @@ public:
     void MakeTestBoxes() {
         std::string errmsg; 
         // MAKE TWO BOXES
-        MyBox *a = MakeAddBox(200,200);
-        MyBox *b = MakeAddBox(400,200); 
+        FSM_Node *a = MakeAddBox(200,200);
+        FSM_Node *b = MakeAddBox(400,200); 
         // VERIFY WE CAN SET CONSTANTS FOR INPUTS AFTER BUTTONS CREATED
         //    "Constant values" are a concept we implement in our MyButton class,
         //    allowing unconnected input buttons to be assigned a fixed value.
@@ -571,7 +571,7 @@ public:
     }
 
     // Recurse the tree backwards, accumulating boxes forwards
-    void GetBoxesSorted(std::vector<MyBox*> &boxes, MyBox *box) {
+    void GetBoxesSorted(std::vector<FSM_Node*> &boxes, FSM_Node *box) {
         if ( box->IsTraversed() ) return;
         box->SetTraversed(1);
         // Loop thru input buttons, walking up the tree one level
@@ -582,7 +582,7 @@ public:
             inbut->GetOutputBoxes(outboxes); 
             // Loop through all the boxes we collected
             for ( size_t j=0; j<outboxes.size(); j++ ) {
-                MyBox *mybox = (MyBox*)outboxes[j];
+                FSM_Node *mybox = (FSM_Node*)outboxes[j];
                 GetBoxesSorted(boxes, mybox);
             }
         }
@@ -590,16 +590,16 @@ public:
     }
 
     // Return an array of boxes sorted 'appropriately' for code generation
-    void GetBoxesSortedLeftToRight(std::vector<MyBox*> &boxes) {
+    void GetBoxesSortedLeftToRight(std::vector<FSM_Node*> &boxes) {
         int i;
         // Mark all boxes 'traversed'
         for ( i=0; i<mydesk->GetOpBoxTotal(); i++ ) {
-            MyBox *box = (MyBox*)mydesk->GetOpBox(i);
+            FSM_Node *box = (FSM_Node*)mydesk->GetOpBox(i);
             box->SetTraversed(0);
         }
         // Find all boxes that have no outputs
         for ( i=0; i<mydesk->GetOpBoxTotal(); i++ ) {
-            MyBox *box = (MyBox*)mydesk->GetOpBox(i);
+            FSM_Node *box = (FSM_Node*)mydesk->GetOpBox(i);
             int tconnects = 0;
             int outbuts = box->GetTotalOutputButtons();
             for ( int j=0; j<outbuts; j++ ) {
@@ -640,11 +640,11 @@ public:
         code += "#!/usr/bin/perl\n"
                 "### START\n\n";
         // Get a list of the boxes sorted in left-to-right order
-        std::vector<MyBox*> boxes;
+        std::vector<FSM_Node*> boxes;
         GetBoxesSortedLeftToRight(boxes); 
         // Walk the box list, generating code as we go
         for ( size_t t=0; t<boxes.size(); t++ ) {
-            MyBox *box = boxes[t];
+            FSM_Node *box = boxes[t];
             code += box->GetExpandedSourceCode();
         }
         // C STYLE FOOTER
